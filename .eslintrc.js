@@ -6,7 +6,7 @@ module.exports = {
   },
   extends: ["plugin:react/recommended", "standard", "standard-react"],
   plugins: ["react", "typescript"],
-  parser: "typescript-eslint-parser",
+  parser: "babel-eslint",
   rules: {
     // TypeScript styling.
     "typescript/no-explicit-any": ["error"],

@@ -4,8 +4,6 @@ import JssProvider from 'react-jss/lib/JssProvider'
 import flush from 'styled-jsx/server'
 import getPageContext from '../components/getPageContext'
 
-const ico = 'https://cdn.discordapp.com/avatars/383591525944262656/7b826edf3e6dcb47dbbb1131aaf72710.jpg'
-
 class MyDocument extends Document {
   render () {
     const { pageContext } = this.props
@@ -13,7 +11,7 @@ class MyDocument extends Document {
     return (
       <html lang='en' dir='ltr'>
         <Head>
-          <link rel='icon' href={ico} />
+          <link rel='icon' href={''} />
           <meta charSet='utf-8' />
           {/* Use minimum-scale=1 to enable GPU rasterization */}
           <meta
@@ -26,9 +24,9 @@ class MyDocument extends Document {
           {/* PWA primary color */}
           <meta name='theme-color' content={pageContext.theme.palette.primary.main} />
           {/* Open Graph Protocol support. */}
-          <meta property='og:title' content='IveBot' />
+          <meta property='og:title' content='ReCon' />
           <meta property='og:type' content='website' />
-          <meta property='og:image' content={ico} />
+          {/* <meta property='og:image' content={ico} /> */}
           <link
             rel='stylesheet'
             href='https://fonts.googleapis.com/css?family=Roboto:300,400,500'
