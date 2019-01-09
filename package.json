@@ -11,12 +11,14 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.ts,.tsx"
+    "lint": "eslint . --ext .js,.ts,.tsx && tsc --noEmit"
   },
   "dependencies": {
+    "@material-ui/core": "^3.8.2",
     "next": "^7.0.2",
     "react": "^16.7.0",
-    "react-dom": "^16.7.0"
+    "react-dom": "^16.7.0",
+    "react-jss": "^8.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
