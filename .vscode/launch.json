@@ -12,14 +12,6 @@
       "webRoot": "${workspaceRoot}"
     },
     {
-      "type": "chrome",
-      "request": "launch",
-      "name": "Next: Vivaldi",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceRoot}",
-      "runtimeExecutable": "vivaldi"
-    },
-    {
       "type": "node",
       "request": "launch",
       "name": "Next: Node",

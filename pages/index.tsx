@@ -28,7 +28,7 @@ const Index = () => (
           Welcome to ReConsole! Enter your designated username and password to access console.
         </Typography>
         <TextField required label='Username' autoFocus fullWidth />
-        <br /><br /><TextField required label='Password' autoFocus fullWidth type='password' />
+        <br /><br /><TextField required label='Password' fullWidth type='password' />
         <br /><br /><Button variant='contained' color='secondary' fullWidth>Log In</Button>
       </Paper>
     </div>

@@ -16,7 +16,7 @@ const Index = () => (
     <AppBar>
       <Toolbar>
         <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReCon</Typography>
-        <Link prefetch href='/index'><Button color='inherit'>Index</Button></Link>
+        <Link prefetch href='/'><Button color='inherit'>Console</Button></Link>
       </Toolbar>
     </AppBar>
     <br /><br /><br /><br />
