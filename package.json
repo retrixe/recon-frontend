@@ -11,10 +11,11 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.ts,.tsx && tsc --noEmit"
+    "lint": "eslint . --ext .js,.ts,.tsx --ignore-pattern *.d.ts && tsc --noEmit"
   },
   "dependencies": {
     "@material-ui/core": "^3.8.2",
+    "isomorphic-unfetch": "^3.0.0",
     "next": "^7.0.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
