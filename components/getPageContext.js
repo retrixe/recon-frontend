@@ -7,8 +7,8 @@ import { createMuiTheme, createGenerateClassName, colors } from '@material-ui/co
 // It's optional.
 const theme = createMuiTheme({
   palette: {
-    primary: colors.teal,
-    secondary: colors.pink,
+    primary: colors.blue,
+    secondary: colors.purple,
     type: 'dark'
   }
 })
