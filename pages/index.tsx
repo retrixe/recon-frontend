@@ -12,39 +12,62 @@ interface Status {
   code: number, online: boolean, maxPlayers: number, playersOnline: number, versionName: string
 }
 interface S {
-  listening: boolean, status?: Status, username: string, password: string
+  listening: boolean, status?: Status, username: string, password: string, failedAuth: boolean
 }
 
 class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
   constructor (props: { width: 'xs' | 'sm' | 'md' | 'lg' | 'xl' }) {
     super(props)
-    this.state = { listening: false, username: '', password: '' }
+    this.state = { listening: false, username: '', password: '', failedAuth: false }
     this.login = this.login.bind(this)
   }
 
   async componentDidMount () {
     try {
       this.setState({ status: await (await fetch(ip + ':4200/')).json(), listening: true })
+      // Set an interval of 10 seconds to repeatedly check if the server listens.
+      // TODO: Test behaviour.
+      setInterval(async () => {
+        // Try to access the server.
+        try {
+          // Update the status.
+          this.setState({ status: await (await fetch(ip + ':4200/')).json(), listening: true })
+        } catch (e) {
+          if (this.state.listening) { // If it was listening before, we warn that it's not anymore.
+            console.warn('Cannot connect to remote Minecraft server with ReConsole!\n' + e)
+          } // Then we set listening to false.
+          this.setState({ listening: false })
+        }
+        // Should happen every 10 seconds.
+      }, 10000)
     } catch (e) {
       console.warn('Cannot connect to remote Minecraft server with ReConsole!\n' + e)
     }
   }
 
   async login () {
-    console.log('triggered')
-    if (!this.state.listening) return // Something here too which is intuitive.
+    if (!this.state.listening) return // Don't proceed if we're not listening.
     try {
       const request = await fetch(ip + ':4200/login', {
         method: 'POST', headers: { Username: this.state.username, Password: this.state.password }
       })
       const response = await request.json()
-      if (!response.success) return // Handles will be inserted here with a special one for 401.
+      // If request failed..
+      if (!response.success) {
+        // If it was an authentication error, we handle it by setting failedAuth to true.
+        if (response.code === 401) this.setState({ failedAuth: true })
+        // TODO: We'll have another handle here for other errors.
+        return
+      }
       // Save the access token in localStorage if we are on the client.
       try {
-        if (localStorage && response.access_token
-        ) localStorage.setItem('accessToken', response.access_token)
+        if (localStorage && response.access_token) {
+          localStorage.setItem('accessToken', response.access_token)
+          // Also, if authentication previously failed, let's just say it succeeded.
+          this.setState({ failedAuth: false })
+        }
       } catch (e) {}
-      // Log any errors if this fails.
+      // Log any errors if this fails (needs to change, TODO)
     } catch (e) { console.error(e) }
   }
 
@@ -54,13 +77,15 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
     const versionName = status ? status.versionName : undefined
     // Responsive styling.
     const paperStyle = ['xs', 'sm'].includes(this.props.width) ? { flex: 1 } : { width: '33vw' }
+    const allowLogin = !this.state.username || !this.state.password || !this.state.listening
     const ResponsiveButton = ['xs', 'sm'].includes(this.props.width) ? (
       <Button variant='contained' color='secondary' onClick={this.login} fullWidth
-        disabled={!this.state.username || !this.state.password}>Log In</Button>
+        disabled={allowLogin}>Log In</Button>
     ) : (
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        <Button variant='contained' color='secondary' onClick={this.login}
-          disabled={!this.state.username || !this.state.password}>Log In</Button>
+        <Button variant='contained' color='secondary' onClick={this.login} disabled={allowLogin}>
+          Log In
+        </Button>
       </div>
     )
     // Return the code.
@@ -94,12 +119,16 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
                 Welcome to ReConsole! Enter your designated username and password to access console.
               </Typography>
               <TextField required label='Username' fullWidth value={this.state.username}
-                onChange={e => this.setState({ username: e.target.value })} autoFocus />
+                onChange={e => this.setState({ username: e.target.value })} autoFocus
+                error={this.state.failedAuth} />
               <br /><br />
               <TextField required label='Password' fullWidth value={this.state.password}
                 onChange={e => this.setState({ password: e.target.value })} type='password'
-                onSubmit={this.login} onKeyPress={e => e.key === 'Enter' && this.login()} />
-              <br /><br />
+                onSubmit={this.login} onKeyPress={e => e.key === 'Enter' && this.login()}
+                error={this.state.failedAuth} />
+              <br />{this.state.failedAuth ? (<><br />
+                <Typography color='error'>Your username or password is incorrect.</Typography>
+              </>) : ''}<br />
               {ResponsiveButton}
             </Paper>
           </div>
