@@ -1,7 +1,9 @@
 import * as React from 'react'
 import {
-  AppBar, Toolbar, Button, Typography, Paper, List, ListItem, ListItemText, Drawer
+  AppBar, Toolbar, Button, Typography, Paper, Drawer, withWidth, IconButton, List, ListItem,
+  ListItemText
 } from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu'
 import Link from 'next/link'
 import withRoot from '../components/withRoot'
 
@@ -15,8 +17,8 @@ interface S {
   loggedIn: boolean, openDrawer: boolean
 }
 
-class Index extends React.Component<{}, S> {
-  constructor (props: {}) {
+class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
+  constructor (props: { width: 'xs'|'sm'|'md'|'lg'|'xl' }) {
     super(props)
     this.state = { loggedIn: false, openDrawer: false }
   }
@@ -29,6 +31,7 @@ class Index extends React.Component<{}, S> {
 
   render () {
     // Return the code.
+    const drawerVariant = this.props.width === 'xs' ? 'temporary' : 'permanent'
     return (
       <div style={{ display: 'flex' }}>
         <head>
@@ -39,21 +42,32 @@ class Index extends React.Component<{}, S> {
         </head>
         <AppBar style={{ width: '100vw', zIndex: 1000000000 }}>
           <Toolbar>
+            {this.props.width === 'xs' ? (
+              <IconButton color='inherit' aria-label='Open drawer'
+                onClick={() => this.setState({ openDrawer: !this.state.openDrawer })}
+              ><MenuIcon /></IconButton>
+            ) : ''}
             <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReConsole</Typography>
             <Link href='/about'><Button color='inherit'>About</Button></Link>
           </Toolbar>
         </AppBar>
-        <Drawer variant='permanent' style={{ flexShrink: 0, width: 200 }}>
+        <Drawer
+          variant={drawerVariant} style={{ flexShrink: 0, width: 200 }}
+          open={this.state.openDrawer}
+          onClose={() => this.setState({ openDrawer: false })}
+        >
           <div style={{ height: 64 }} />
           <List>
-            {['Just a drawer'].map((text, index) => (
+            {['Performance Metrics'].map(text => (
               <ListItem style={{ width: 200 }} button key={text}>
                 <ListItemText primary={text} />
               </ListItem>
             ))}
           </List>
         </Drawer>
-        <div style={{
+        <div style={drawerVariant === 'temporary' ? {
+          background: 'linear-gradient(to top, #fc00ff, #00dbde)', height: '100vh', width: '100vw'
+        } : {
           background: 'linear-gradient(to top, #fc00ff, #00dbde)',
           height: '100vh',
           width: `calc(100vw - 200px)`
@@ -77,4 +91,4 @@ class Index extends React.Component<{}, S> {
   }
 }
 
-export default withRoot(Index)
+export default withRoot(withWidth()(Index))
