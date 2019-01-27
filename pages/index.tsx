@@ -3,6 +3,7 @@ import {
   AppBar, Toolbar, Button, Typography, Paper, TextField, withWidth
 } from '@material-ui/core'
 import Link from 'next/link'
+import Router from 'next/router'
 import withRoot from '../components/withRoot'
 
 import { ip } from '../config.json'
@@ -24,6 +25,9 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
 
   async componentDidMount () {
     try {
+      // Automatically forward to dashboard if logged in.
+      try { if (localStorage.getItem('accessToken')) Router.push('/dashboard') } catch (e) {}
+      // Check if the server is online.
       this.setState({ status: await (await fetch(ip + ':4200/')).json(), listening: true })
       // Set an interval of 10 seconds to repeatedly check if the server listens.
       // TODO: Test behaviour.
@@ -60,11 +64,14 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
         return
       }
       // Save the access token in localStorage if we are on the client.
+      // We'll add sessionStorage support later for Remember Me stuff.
       try {
         if (localStorage && response.access_token) {
           localStorage.setItem('accessToken', response.access_token)
           // Also, if authentication previously failed, let's just say it succeeded.
           this.setState({ failedAuth: false })
+          // Then we redirect to the new page.
+          Router.push('/dashboard')
         }
       } catch (e) {}
       // Log any errors if this fails (needs to change, TODO)
@@ -93,15 +100,15 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
       <div style={{ background: 'linear-gradient(to top, #fc00ff, #00dbde)' }}>
         <div style={{ marginRight: 16, marginLeft: 16 }}>
           <head>
-            <title>ReCon</title>
+            <title>ReConsole</title>
             {/* <meta property='og:url' content={`${rootURL}/`} /> */}
             {/* <meta property='og:description' content='' /> */}
             {/* <meta name='Description' content='IveBot is a multi-purpose Discord bot.' /> */}
           </head>
           <AppBar>
             <Toolbar>
-              <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReCon</Typography>
-              <Link prefetch href='/about'><Button color='inherit'>About</Button></Link>
+              <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReConsole</Typography>
+              <Link href='/about'><Button color='inherit'>About</Button></Link>
             </Toolbar>
           </AppBar>
           <div style={{
