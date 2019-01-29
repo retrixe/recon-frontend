@@ -7,8 +7,11 @@ import MenuIcon from '@material-ui/icons/Menu'
 import TrendingUp from '@material-ui/icons/TrendingUp'
 import Link from 'next/link'
 
-import withRoot from '../components/withRoot'
-import Statistics from '../components/statistics'
+import { ip } from '../config.json'
+import * as fetch from 'isomorphic-unfetch'
+
+import withRoot from '../components/imports/withRoot'
+import Statistics from '../components/dashboard/statistics'
 
 type PageName = 'Statistics'
 interface S {
@@ -23,7 +26,12 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
 
   async componentDidMount () {
     try {
-      if (localStorage && localStorage.getItem('accessToken')) this.setState({ loggedIn: true })
+      if (
+        localStorage && localStorage.getItem('accessToken') && (await (await fetch(
+          ip + ':4200/login/validate',
+          { headers: { 'Access-Token': localStorage.getItem('accessToken') } }
+        )).json()).success
+      ) this.setState({ loggedIn: true })
     } catch (e) {}
   }
 
@@ -48,6 +56,10 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
               <div style={{ marginRight: 10 }} />
             </>) : ''}
             <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReConsole</Typography>
+            <Link href='/'><Button color='inherit' onClick={() => {
+              try { localStorage.removeItem('accessToken') } catch (e) {}
+            }}>Logout</Button></Link>
+            <div style={{ marginRight: 5 }} />
             <Link href='/about'><Button color='inherit'>About</Button></Link>
           </Toolbar>
         </AppBar>
@@ -85,7 +97,9 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
               <Paper style={{ padding: 10 }}>
                 <Typography>
                   {'It doesn\'t look like you should be here.'}<Link prefetch href='/'>
-                    <Typography color='primary' component='a'>Consider logging in?</Typography>
+                    <Typography color='primary' component='a' onClick={() => {
+                      try { localStorage.removeItem('accessToken') } catch (e) {}
+                    }}>Consider logging in?</Typography>
                   </Link>
                 </Typography>
               </Paper>

@@ -4,7 +4,7 @@ import {
 } from '@material-ui/core'
 import Link from 'next/link'
 import Router from 'next/router'
-import withRoot from '../components/withRoot'
+import withRoot from '../components/imports/withRoot'
 
 import { ip } from '../config.json'
 import * as fetch from 'isomorphic-unfetch'

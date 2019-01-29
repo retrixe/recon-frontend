@@ -3,7 +3,7 @@ import {
   AppBar, Toolbar, Button, Typography
 } from '@material-ui/core'
 import Link from 'next/link'
-import withRoot from '../components/withRoot'
+import withRoot from '../components/imports/withRoot'
 
 const Index = () => (
   <div style={{ marginRight: 16, marginLeft: 16 }}>
