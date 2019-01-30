@@ -69,6 +69,14 @@ export default class Dashboard extends React.Component<{}, S> {
     const normalisedMemory = () => (
       this.state.statistics.memoryUsed * 100 / this.state.statistics.totalMemory
     )
+    // Calculate uptime string.
+    const d = duration(Date.now() - this.state.statistics.onlineSince)
+    let upt: string
+    const days = Math.floor(d.asDays())
+    if (days) upt = `${days} days ${d.hours()} hours ${d.minutes()} minutes ${d.seconds()} seconds`
+    else if (d.hours()) upt = `${d.hours()} hours ${d.minutes()} minutes ${d.seconds()} seconds`
+    else if (d.minutes()) upt = `${d.minutes()} minutes ${d.seconds()} seconds`
+    else upt = `${d.seconds()} seconds`
     return (
       <>
         {/* Information about the server. */}
@@ -80,10 +88,7 @@ export default class Dashboard extends React.Component<{}, S> {
           <Typography variant='h6'>Players Online</Typography><Typography gutterBottom>
             {this.state.statistics.playersOnline}/{this.state.statistics.maxPlayers}
           </Typography>
-          <Typography variant='h6'>Server Uptime</Typography>
-          <Typography>{
-            duration(Date.now() - this.state.statistics.onlineSince).minutes()
-          } minutes</Typography>
+          <Typography variant='h6'>Server Uptime</Typography><Typography>{upt}</Typography>
         </Paper><div style={{ marginBottom: 30 }} />
         {/* Performance statistics. */}
         <Paper style={{ padding: 10 }}>
