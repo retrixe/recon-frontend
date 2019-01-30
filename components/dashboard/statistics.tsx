@@ -7,16 +7,16 @@ import { duration } from 'moment'
 import { ip } from '../../config.json'
 import * as fetch from 'isomorphic-unfetch'
 
-interface Statistics {
+interface Stats {
   code: number, online: boolean, maxPlayers: number, playersOnline: number, versionName: string,
   onlineSince: number, totalMemory: number, memoryUsed: number, cpuUsage: number
 }
 
 interface S {
-  statistics?: Statistics, listening: boolean
+  statistics?: Stats, listening: boolean
 }
 
-export default class Dashboard extends React.Component<{}, S> {
+export default class Statistics extends React.Component<{}, S> {
   constructor (props: {}) {
     super(props)
     this.state = { listening: false }

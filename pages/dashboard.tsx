@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import TrendingUp from '@material-ui/icons/TrendingUp'
+import Fingerprint from '@material-ui/icons/Fingerprint'
 import Link from 'next/link'
 
 import { ip } from '../config.json'
@@ -12,8 +13,9 @@ import * as fetch from 'isomorphic-unfetch'
 
 import withRoot from '../components/imports/withRoot'
 import Statistics from '../components/dashboard/statistics'
+import Whitelist from '../components/dashboard/whitelist'
 
-type PageName = 'Statistics'
+type PageName = 'Statistics'|'Whitelist'
 interface S {
   loggedIn: boolean, openDrawer: boolean, currentPage: PageName
 }
@@ -38,6 +40,7 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
   render () {
     // Return the code.
     let PageToLoad = Statistics
+    if (this.state.currentPage === 'Whitelist') PageToLoad = Whitelist
     const drawerVariant = this.props.width === 'xs' ? 'temporary' : 'permanent'
     return (
       <div style={{ display: 'flex' }}>
@@ -47,7 +50,8 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
           {/* <meta property='og:description' content='' /> */}
           {/* <meta name='Description' content='IveBot is a multi-purpose Discord bot.' /> */}
         </head>
-        <AppBar style={{ width: '100vw', zIndex: 1000000000 }}>
+        {/* The drawer. */}
+        <AppBar style={{ width: '100vw', zIndex: this.props.width !== 'xs' ? 1000000000 : 1 }}>
           <Toolbar>
             {this.props.width === 'xs' && this.state.loggedIn ? (<>
               <IconButton color='inherit' aria-label='Open drawer'
@@ -63,16 +67,18 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
             <Link href='/about'><Button color='inherit'>About</Button></Link>
           </Toolbar>
         </AppBar>
+        {/* The drawer. */}
         {this.state.loggedIn ? (
           <Drawer
             variant={drawerVariant} style={{ flexShrink: 0, width: 200 }}
             open={this.state.openDrawer}
             onClose={() => this.setState({ openDrawer: false })}
           >
-            <div style={{ height: 64 }} />
+            {this.props.width !== 'xs' ? <div style={{ height: 64 }} /> : ''}
             <List>
               {[
-                { name: 'Statistics', icon: <TrendingUp /> }
+                { name: 'Statistics', icon: <TrendingUp /> },
+                { name: 'Whitelist', icon: <Fingerprint /> }
               ].map((page: { name: PageName, icon: any }) => (<>
                 <ListItem style={{ width: 200 }} button key={page.name} onClick={
                   () => this.setState({ currentPage: page.name })
@@ -85,6 +91,7 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
             </List>
           </Drawer>
         ) : ''}
+        {/* Everything other than the drawer. */}
         <div style={drawerVariant === 'temporary' || !this.state.loggedIn ? {
           background: 'linear-gradient(to top, #fc00ff, #00dbde)', height: '100vh', width: '100vw'
         } : {
