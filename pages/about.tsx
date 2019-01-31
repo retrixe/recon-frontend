@@ -7,12 +7,12 @@ import withRoot from '../components/imports/withRoot'
 
 const Index = () => (
   <div style={{ marginRight: 16, marginLeft: 16 }}>
-    <head>
+    <>
       <title>About ReCon</title>
       {/* <meta property='og:url' content={`${rootURL}/`} /> */}
       {/* <meta property='og:description' content='' /> */}
       {/* <meta name='Description' content='IveBot is a multi-purpose Discord bot.' /> */}
-    </head>
+    </>
     <AppBar>
       <Toolbar>
         <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReCon</Typography>

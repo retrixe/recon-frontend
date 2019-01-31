@@ -44,12 +44,12 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
     const drawerVariant = this.props.width === 'xs' ? 'temporary' : 'permanent'
     return (
       <div style={{ display: 'flex' }}>
-        <head>
+        <>
           <title>Dashboard - ReConsole</title>
           {/* <meta property='og:url' content={`${rootURL}/`} /> */}
           {/* <meta property='og:description' content='' /> */}
           {/* <meta name='Description' content='IveBot is a multi-purpose Discord bot.' /> */}
-        </head>
+        </>
         {/* The drawer. */}
         <AppBar style={{ width: '100vw', zIndex: this.props.width !== 'xs' ? 1000000000 : 1 }}>
           <Toolbar>
@@ -79,15 +79,15 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
               {[
                 { name: 'Statistics', icon: <TrendingUp /> },
                 { name: 'Whitelist', icon: <Fingerprint /> }
-              ].map((page: { name: PageName, icon: any }) => (<>
-                <ListItem style={{ width: 200 }} button key={page.name} onClick={
+              ].map((page: { name: PageName, icon: any }) => (<div key={page.name}>
+                <ListItem style={{ width: 200 }} button onClick={
                   () => this.setState({ currentPage: page.name })
                 }>
                   <ListItemIcon>{page.icon}</ListItemIcon>
                   <ListItemText primary={page.name} />
                 </ListItem>
                 <Divider />
-              </>))}
+              </div>))}
             </List>
           </Drawer>
         ) : ''}

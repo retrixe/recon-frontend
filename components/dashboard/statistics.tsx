@@ -12,8 +12,8 @@ interface Stats {
   onlineSince: number, totalMemory: number, memoryUsed: number, cpuUsage: number
 }
 
-interface S {
-  statistics?: Stats, listening: boolean
+interface S { // eslint-disable-next-line no-undef
+  statistics?: Stats, listening: boolean, interval?: NodeJS.Timeout
 }
 
 export default class Statistics extends React.Component<{}, S> {
@@ -33,7 +33,7 @@ export default class Statistics extends React.Component<{}, S> {
         this.setState({ statistics, listening: true })
       } catch (e) {}
       // Set an interval of 2 seconds to repeatedly update the statistics.
-      setInterval(async () => {
+      const interval = setInterval(async () => {
         // Try to access the server.
         try {
           // Update the status.
@@ -52,8 +52,14 @@ export default class Statistics extends React.Component<{}, S> {
       }, 2000)
       // This can be server-side rendering error so we won't log on catch.
       // Client side rendering will alert the user anyways.
+      // We set the interval in state to unregister it later..
+      this.setState({ interval })
     } catch (e) {}
   }
+
+  // Clear interval on timeout.
+  componentWillUnmount () { clearInterval(this.state.interval) }
+
   render () {
     // Return the code.
     if (!this.state.listening || !this.state.statistics) {

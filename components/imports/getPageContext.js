@@ -10,7 +10,8 @@ const theme = createMuiTheme({
     primary: colors.blue,
     secondary: colors.purple,
     type: 'dark'
-  }
+  },
+  typography: { useNextVariants: true }
 })
 
 function createPageContext () {

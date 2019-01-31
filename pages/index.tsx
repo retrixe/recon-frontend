@@ -13,7 +13,9 @@ interface Status {
   code: number, online: boolean, maxPlayers: number, playersOnline: number, versionName: string
 }
 interface S {
-  listening: boolean, status?: Status, username: string, password: string, failedAuth: boolean
+  listening: boolean, status?: Status, username: string, password: string, failedAuth: boolean,
+  // eslint-disable-next-line no-undef
+  interval?: NodeJS.Timeout
 }
 
 class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
@@ -29,25 +31,30 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
       try { if (localStorage.getItem('accessToken')) Router.push('/dashboard') } catch (e) {}
       // Check if the server is online.
       this.setState({ status: await (await fetch(ip + ':4200/')).json(), listening: true })
-      // Set an interval of 10 seconds to repeatedly check if the server listens.
-      // TODO: Test behaviour.
-      setInterval(async () => {
-        // Try to access the server.
-        try {
-          // Update the status.
-          this.setState({ status: await (await fetch(ip + ':4200/')).json(), listening: true })
-        } catch (e) {
-          if (this.state.listening) { // If it was listening before, we warn that it's not anymore.
-            console.warn('Cannot connect to remote Minecraft server with ReConsole!\n' + e)
-          } // Then we set listening to false.
-          this.setState({ listening: false })
-        }
-        // Should happen every 10 seconds.
-      }, 10000)
     } catch (e) {
       console.warn('Cannot connect to remote Minecraft server with ReConsole!\n' + e)
     }
+    // Set an interval of 10 seconds to repeatedly check if the server listens.
+    // TODO: Test behaviour.
+    const interval = setInterval(async () => {
+      // Try to access the server.
+      try {
+        // Update the status.
+        this.setState({ status: await (await fetch(ip + ':4200/')).json(), listening: true })
+      } catch (e) {
+        if (this.state.listening) { // If it was listening before, we warn that it's not anymore.
+          console.warn('Cannot connect to remote Minecraft server with ReConsole!\n' + e)
+        } // Then we set listening to false.
+        this.setState({ listening: false })
+      }
+      // Should happen every 10 seconds.
+    }, 10000)
+    // We set the interval in state to unregister it later..
+    this.setState({ interval })
   }
+
+  // Clear interval on timeout.
+  componentWillUnmount () { clearInterval(this.state.interval) }
 
   async login () {
     if (!this.state.listening) return // Don't proceed if we're not listening.
@@ -99,12 +106,12 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
     return (
       <div style={{ background: 'linear-gradient(to top, #fc00ff, #00dbde)' }}>
         <div style={{ marginRight: 16, marginLeft: 16 }}>
-          <head>
+          <>
             <title>ReConsole</title>
             {/* <meta property='og:url' content={`${rootURL}/`} /> */}
             {/* <meta property='og:description' content='' /> */}
             {/* <meta name='Description' content='IveBot is a multi-purpose Discord bot.' /> */}
-          </head>
+          </>
           <AppBar>
             <Toolbar>
               <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReConsole</Typography>
@@ -115,13 +122,13 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
             display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'
           }}>
             <Paper elevation={24} style={{ padding: 15, ...paperStyle }}>
-              <Typography variant='headline'>Status</Typography><br />
+              <Typography variant='h5'>Status</Typography><br />
               <Typography>
                 {this.state.listening && status && status.online
                   ? `Online | ${versionName} | ${status.playersOnline}/${status.maxPlayers} online`
                   : 'Cannot connect to server via ReConsole.'}
               </Typography>
-              <hr /><Typography variant='headline'>Log In</Typography><br />
+              <hr /><Typography variant='h5'>Log In</Typography><br />
               <Typography gutterBottom>
                 Welcome to ReConsole! Enter your designated username and password to access console.
               </Typography>

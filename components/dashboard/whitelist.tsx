@@ -12,8 +12,8 @@ interface WhitelistStats {
   code: number, enabled: boolean, whitelistedPlayers: ({ name: string, uuid: string })[]
 }
 
-interface S {
-  whitelist?: WhitelistStats, listening: boolean
+interface S { // eslint-disable-next-line no-undef
+  whitelist?: WhitelistStats, listening: boolean, interval?: NodeJS.Timeout
 }
 
 export default class Whitelist extends React.Component<{}, S> {
@@ -33,7 +33,7 @@ export default class Whitelist extends React.Component<{}, S> {
         this.setState({ whitelist, listening: true })
       } catch (e) {}
       // Set an interval of 30 seconds to repeatedly update the whitelist.
-      setInterval(async () => {
+      const interval = setInterval(async () => {
         // Try to access the server.
         try {
           // Update the status.
@@ -52,8 +52,13 @@ export default class Whitelist extends React.Component<{}, S> {
       }, 30000)
       // This can be server-side rendering error so we won't log on catch.
       // Client side rendering will alert the user anyways.
+      // We set the interval in state to unregister it later..
+      this.setState({ interval })
     } catch (e) {}
   }
+
+  // Clear interval on timeout.
+  componentWillUnmount () { clearInterval(this.state.interval) }
 
   render () {
     // Return the code.
@@ -92,8 +97,8 @@ export default class Whitelist extends React.Component<{}, S> {
           <Typography variant='h6'>List of Whitelisted Players</Typography>
           <div style={{ paddingBottom: 0 }} />
           {this.state.whitelist.whitelistedPlayers.length ? (<List component='nav'>
-            {this.state.whitelist.whitelistedPlayers.map(i => (<>
-              <Divider /><ListItem key={i.uuid}>
+            {this.state.whitelist.whitelistedPlayers.map(i => (<div key={i.uuid}>
+              <Divider /><ListItem>
                 <ListItemText primary={i.name} />
                 <ListItemSecondaryAction>
                   <IconButton aria-label='remove' onClick={async () => {
@@ -112,7 +117,7 @@ export default class Whitelist extends React.Component<{}, S> {
                   }}><Delete /></IconButton>
                 </ListItemSecondaryAction>
               </ListItem><Divider />
-            </>))}
+            </div>))}
           </List>) : <Typography>Looks like no one is whitelisted.</Typography>}
         </Paper>
       </>
