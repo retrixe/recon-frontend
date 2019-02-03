@@ -1,9 +1,10 @@
 import * as React from 'react'
 import {
   Typography, Paper, Divider, FormControlLabel, Checkbox, List, ListItem, ListItemText,
-  ListItemSecondaryAction, IconButton
+  ListItemSecondaryAction, IconButton, TextField, Fab
 } from '@material-ui/core'
 import Delete from '@material-ui/icons/Delete'
+import Add from '@material-ui/icons/Add'
 
 import { ip } from '../../config.json'
 import * as fetch from 'isomorphic-unfetch'
@@ -13,13 +14,14 @@ interface WhitelistStats {
 }
 
 interface S { // eslint-disable-next-line no-undef
-  whitelist?: WhitelistStats, listening: boolean, interval?: NodeJS.Timeout
+  whitelist?: WhitelistStats, listening: boolean, interval?: NodeJS.Timeout, username: string
 }
 
 export default class Whitelist extends React.Component<{}, S> {
   constructor (props: {}) {
     super(props)
-    this.state = { listening: false }
+    this.state = { listening: false, username: '' }
+    this.addPlayerToWhitelist = this.addPlayerToWhitelist.bind(this)
   }
 
   async componentDidMount () {
@@ -59,6 +61,20 @@ export default class Whitelist extends React.Component<{}, S> {
 
   // Clear interval on timeout.
   componentWillUnmount () { clearInterval(this.state.interval) }
+
+  async addPlayerToWhitelist () {
+    try {
+      const request = await (await fetch(
+        `${ip}:4200/whitelist/addPlayerByName?name=${this.state.username}`,
+        { headers: { 'Access-Token': localStorage.getItem('accessToken') } }
+      )).json()
+      if (!request.success) console.warn('Unable to clear player from whitelist.')
+      else {
+        this.setState({ username: '' })
+        await this.componentDidMount()
+      }
+    } catch (e) {}
+  }
 
   render () {
     // Return the code.
@@ -103,10 +119,11 @@ export default class Whitelist extends React.Component<{}, S> {
                 <ListItemSecondaryAction>
                   <IconButton aria-label='remove' onClick={async () => {
                     try {
-                      await (await fetch(
+                      const request = await (await fetch(
                         `${ip}:4200/whitelist/removePlayerByUUID?uuid=${i.uuid}`,
                         { headers: { 'Access-Token': localStorage.getItem('accessToken') } }
                       )).json()
+                      if (!request.success) console.warn('Unable to clear player from whitelist.')
                       this.setState({ whitelist: {
                         ...this.state.whitelist,
                         whitelistedPlayers: this.state.whitelist.whitelistedPlayers.filter(
@@ -119,6 +136,17 @@ export default class Whitelist extends React.Component<{}, S> {
               </ListItem><Divider />
             </div>))}
           </List>) : <Typography>Looks like no one is whitelisted.</Typography>}
+          <br /><Typography variant='h6'>Add Player To Whitelist</Typography>
+          <div style={{ paddingBottom: 10 }} /><Divider />
+          <Paper elevation={10} style={{ padding: 10, display: 'flex' }}>
+            <TextField
+              label='Username' value={this.state.username} fullWidth
+              onChange={e => this.setState({ username: e.target.value })}
+              onSubmit={this.addPlayerToWhitelist}
+              onKeyPress={e => e.key === 'Enter' && this.addPlayerToWhitelist()}
+            /><div style={{ width: 10 }} />
+            <Fab color='secondary' onClick={this.addPlayerToWhitelist}><Add /></Fab>
+          </Paper>
         </Paper>
       </>
     )
