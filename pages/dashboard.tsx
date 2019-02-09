@@ -6,6 +6,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu'
 import TrendingUp from '@material-ui/icons/TrendingUp'
 import Fingerprint from '@material-ui/icons/Fingerprint'
+import Security from '@material-ui/icons/Security'
 import Link from 'next/link'
 
 import { ip } from '../config.json'
@@ -14,8 +15,9 @@ import * as fetch from 'isomorphic-unfetch'
 import withRoot from '../components/imports/withRoot'
 import Statistics from '../components/dashboard/statistics'
 import Whitelist from '../components/dashboard/whitelist'
+import Operators from '../components/dashboard/operators'
 
-type PageName = 'Statistics'|'Whitelist'
+type PageName = 'Statistics'|'Whitelist'|'Operators'
 interface S {
   loggedIn: boolean, openDrawer: boolean, currentPage: PageName
 }
@@ -41,6 +43,7 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
     // Return the code.
     let PageToLoad = Statistics
     if (this.state.currentPage === 'Whitelist') PageToLoad = Whitelist
+    else if (this.state.currentPage === 'Operators') PageToLoad = Operators
     const drawerVariant = this.props.width === 'xs' ? 'temporary' : 'permanent'
     return (
       <div style={{ display: 'flex' }}>
@@ -78,6 +81,7 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
             <List>
               {[
                 { name: 'Statistics', icon: <TrendingUp /> },
+                { name: 'Operators', icon: <Security /> },
                 { name: 'Whitelist', icon: <Fingerprint /> }
               ].map((page: { name: PageName, icon: any }) => (<div key={page.name}>
                 <ListItem style={{ width: 200 }} button onClick={
