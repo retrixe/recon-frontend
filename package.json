@@ -1,6 +1,6 @@
 {
   "name": "recon-frontend",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "A frontend for the ReConsole Minecraft dashboard.",
   "main": "pages/index.tsx",
   "repository": "https://github.com/retrixe/recon-frontend.git",
