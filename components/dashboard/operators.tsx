@@ -26,7 +26,7 @@ export default class Operators extends React.Component<{}, S> {
 
   async componentDidMount () {
     try {
-      // Fetch statistics.
+      // Fetch operators.
       try {
         const operators = await (await fetch(ip + ':4200/operators', {
           headers: { 'Access-Token': localStorage.getItem('accessToken') }

@@ -7,6 +7,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import TrendingUp from '@material-ui/icons/TrendingUp'
 import Fingerprint from '@material-ui/icons/Fingerprint'
 import Security from '@material-ui/icons/Security'
+import Settings from '@material-ui/icons/Settings'
 import Link from 'next/link'
 
 import { ip } from '../config.json'
@@ -16,8 +17,9 @@ import withRoot from '../components/imports/withRoot'
 import Statistics from '../components/dashboard/statistics'
 import Whitelist from '../components/dashboard/whitelist'
 import Operators from '../components/dashboard/operators'
+import ServerProperties from '../components/dashboard/serverProperties'
 
-type PageName = 'Statistics'|'Whitelist'|'Operators'
+type PageName = 'Statistics'|'Whitelist'|'Operators'|'Properties'
 interface S {
   loggedIn: boolean, openDrawer: boolean, currentPage: PageName
 }
@@ -41,9 +43,10 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
 
   render () {
     // Return the code.
-    let PageToLoad = Statistics
+    let PageToLoad: any = Statistics
     if (this.state.currentPage === 'Whitelist') PageToLoad = Whitelist
     else if (this.state.currentPage === 'Operators') PageToLoad = Operators
+    else if (this.state.currentPage === 'Properties') PageToLoad = ServerProperties
     const drawerVariant = this.props.width === 'xs' ? 'temporary' : 'permanent'
     return (
       <div style={{ display: 'flex' }}>
@@ -82,7 +85,8 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
               {[
                 { name: 'Statistics', icon: <TrendingUp /> },
                 { name: 'Operators', icon: <Security /> },
-                { name: 'Whitelist', icon: <Fingerprint /> }
+                { name: 'Whitelist', icon: <Fingerprint /> },
+                { name: 'Properties', icon: <Settings /> }
               ].map((page: { name: PageName, icon: any }) => (<div key={page.name}>
                 <ListItem style={{ width: 200 }} button onClick={
                   () => this.setState({ currentPage: page.name })
