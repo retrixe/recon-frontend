@@ -5,13 +5,16 @@ import {
 import Link from 'next/link'
 import withRoot from '../components/imports/withRoot'
 
+const description = `ReConsole is a Minecraft server control dashboard which allows efficient and \
+easy to set up server administration.`
+
 const Index = () => (
   <div style={{ marginRight: 16, marginLeft: 16 }}>
     <>
       <title>About ReCon</title>
       {/* <meta property='og:url' content={`${rootURL}/`} /> */}
-      {/* <meta property='og:description' content='' /> */}
-      {/* <meta name='Description' content='IveBot is a multi-purpose Discord bot.' /> */}
+      <meta property='og:description' content={description} />
+      <meta name='Description' content={description} />
     </>
     <AppBar>
       <Toolbar>

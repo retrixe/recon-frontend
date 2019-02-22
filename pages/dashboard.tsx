@@ -24,6 +24,10 @@ interface S {
   loggedIn: boolean, openDrawer: boolean, currentPage: PageName
 }
 
+const description = `The dashboard for the Minecraft server.\nReConsole \
+is a Minecraft server control dashboard which allows efficient and easy to set up server \
+administration.`
+
 class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
   constructor (props: { width: 'xs'|'sm'|'md'|'lg'|'xl' }) {
     super(props)
@@ -53,10 +57,10 @@ class Dashboard extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> 
         <>
           <title>Dashboard - ReConsole</title>
           {/* <meta property='og:url' content={`${rootURL}/`} /> */}
-          {/* <meta property='og:description' content='' /> */}
-          {/* <meta name='Description' content='IveBot is a multi-purpose Discord bot.' /> */}
+          <meta property='og:description' content={description} />
+          <meta name='Description' content={description} />
         </>
-        {/* The drawer. */}
+        {/* The AppBar. */}
         <AppBar style={{ width: '100vw', zIndex: this.props.width !== 'xs' ? 1000000000 : 1 }}>
           <Toolbar>
             {this.props.width === 'xs' && this.state.loggedIn ? (<>

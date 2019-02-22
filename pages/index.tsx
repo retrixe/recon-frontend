@@ -18,6 +18,17 @@ interface S {
   interval?: NodeJS.Timeout
 }
 
+// TODO:
+/*
+- Support toggling background gradient.
+- Support customizable titles for servers.
+- Have a rootURL environment variable.
+*/
+
+const description = `Login page for the Minecraft server.\nReConsole is a \
+Minecraft server control dashboard which allows efficient and \
+easy to set up server administration.`
+
 class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
   constructor (props: { width: 'xs' | 'sm' | 'md' | 'lg' | 'xl' }) {
     super(props)
@@ -109,8 +120,8 @@ class Index extends React.Component<{ width: 'xs'|'sm'|'md'|'lg'|'xl' }, S> {
           <>
             <title>ReConsole</title>
             {/* <meta property='og:url' content={`${rootURL}/`} /> */}
-            {/* <meta property='og:description' content='' /> */}
-            {/* <meta name='Description' content='IveBot is a multi-purpose Discord bot.' /> */}
+            <meta property='og:description' content={description} />
+            <meta name='Description' content={description} />
           </>
           <AppBar>
             <Toolbar>
