@@ -54,14 +54,14 @@ export default class ServerProperties extends React.Component<{}, S> {
         {/* server.properties */}
         <Paper style={{ padding: 20 }}>
           <Typography variant='h5' gutterBottom>server.properties</Typography>
-          <div style={{ paddingBottom: 10 }} /><div style={{ overflow: 'auto', height: '60vh' }}>
-            <TextField multiline variant='outlined' fullWidth
-              value={this.state.serverProperties.content}
-              onChange={e => this.setState({
-                serverProperties: { ...this.state.serverProperties, content: e.target.value }
-              })}
-            />
-          </div><br /><div style={{ display: 'flex', marginTop: 10 }}>
+          <div style={{ paddingBottom: 10 }} />
+          <TextField multiline variant='outlined' fullWidth rowsMax={20}
+            value={this.state.serverProperties.content}
+            onChange={e => this.setState({
+              serverProperties: { ...this.state.serverProperties, content: e.target.value }
+            })}
+          />
+          <br /><div style={{ display: 'flex', marginTop: 10 }}>
             <Button variant='outlined' onClick={() => this.setState({
               serverProperties: { ...this.state.serverProperties, content: this.state.origContent }
             })}>Cancel</Button>
