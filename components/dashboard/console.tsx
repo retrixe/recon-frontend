@@ -8,53 +8,59 @@ import { ip } from '../../config.json'
 import * as fetch from 'isomorphic-unfetch'
 
 interface S { // eslint-disable-next-line no-undef
-  console?: string, listening: boolean, ws?: WebSocket, command: string
+  console: string, listening: boolean, ws?: WebSocket, command: string
 }
 
 export default class Console extends React.Component<{}, S> {
   constructor (props: {}) {
     super(props)
-    this.state = { listening: false, command: '' }
+    this.state = { listening: false, command: '', console: 'Loading...' }
     this.executeCommand = this.executeCommand.bind(this)
   }
 
   async componentDidMount () {
     try {
       // Connect to console.
-      let ws = new WebSocket(`${ip}:4269`)
+      let ws = new WebSocket(`${ip.split('http').join('ws')}:4269`)
+      // This listener needs to be loaded ASAP.
+      ws.onmessage = (event) => this.setState({ console: `${this.state.console}\n${event.data}` })
       this.setState({ ws, listening: true })
       // Register listeners.
       ws.onerror = () => {
-        console.error('Looks like an error occurred while connected to the gateway.')
+        this.setState({ console: `${this.state.console}\nAn unknown error occurred.` })
       }
-      ws.onmessage = (event) => this.setState({ console: event.data })
       ws.onclose = (event) => {
-        if (!event.wasClean) {
-          // Something.. later.
-        }
+        this.setState({
+          console: this.state.console + '\nThe connection to the server was abruptly closed.'
+        })
+        if (!event.wasClean) {} // Something.. later.
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error('Looks like an error occurred while connecting to console.\n' + e)
+    }
   }
 
   // Close WebSocket when done.
-  componentWillUnmount () { this.state.ws.close() }
+  componentWillUnmount () { this.state.ws && this.state.ws.close() }
 
   async executeCommand () {
     try {
+      this.setState({ console: `${this.state.console}\n>${this.state.command}` })
       const request = await (await fetch(
         `${ip}:4200/console/execute`, {
           headers: { 'Access-Token': localStorage.getItem('accessToken') },
-          body: this.state.command
+          body: this.state.command,
+          method: 'POST'
         }
       )).json()
-      if (!request.success) console.warn('Unable to execute command.')
+      if (!request.success) this.setState({ console: `${this.state.console}\nUnable to execute .` })
       else this.setState({ command: '' })
-    } catch (e) {}
+    } catch (e) { console.error(e) }
   }
 
   render () {
     // Return the code.
-    if (!this.state.listening || !this.state.command) {
+    if (!this.state.listening) {
       return (
         <Paper style={{ padding: 10 }}>
           <Typography>Looks like we can{`'`}t connect to the server. Oops!</Typography>
@@ -71,13 +77,18 @@ export default class Console extends React.Component<{}, S> {
           <Typography variant='h5' gutterBottom>Console</Typography>
           <Divider />
           <Paper style={{
-            padding: 10,
-            marginBottom: 10,
-            backgroundColor: '#111111',
-            height: '60vh'
+            padding: 10, marginBottom: 10, backgroundColor: '#111111', height: '60vh'
           }}>
-            <div style={{ height: '100%', width: '100%', overflow: 'auto' }}>
-              {this.state.console}
+            <div style={{
+              height: '100%',
+              width: '100%',
+              overflow: 'auto',
+              display: 'flex',
+              flexDirection: 'column-reverse'
+            }}>
+              {this.state.console.split('\n').reverse().map((i, index) => (
+                <Typography key={index}>{i}</Typography>
+              ))}
             </div>
           </Paper>
           <Divider />
