@@ -53,8 +53,8 @@ export default class Console extends React.Component<{}, S> {
           method: 'POST'
         }
       )).json()
-      if (!request.success) this.setState({ console: `${this.state.console}\nUnable to execute .` })
-      else this.setState({ command: '' })
+      if (!request.success) console.error(`Failed to execute command: ${this.state.command}`)
+      this.setState({ command: '' })
     } catch (e) { console.error(e) }
   }
 
