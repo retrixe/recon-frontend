@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import { Typography, Paper, TextField, Button } from '@material-ui/core'
 
 import { ip } from '../../config.json'
-import * as fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch'
 
 interface S { // eslint-disable-next-line no-undef
   serverProperties?: { code: number, content: string }, listening: boolean, origContent?: string

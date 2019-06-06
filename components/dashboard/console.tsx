@@ -1,11 +1,11 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Typography, Paper, Divider, TextField, Fab
 } from '@material-ui/core'
 import Check from '@material-ui/icons/Check'
 
 import { ip } from '../../config.json'
-import * as fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch'
 
 interface S { // eslint-disable-next-line no-undef
   console: string, listening: boolean, ws?: WebSocket, command: string

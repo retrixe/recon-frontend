@@ -1,11 +1,11 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Typography, Paper, Divider, LinearProgress
 } from '@material-ui/core'
 import { duration } from 'moment'
 
 import { ip } from '../../config.json'
-import * as fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch'
 
 interface Stats {
   code: number, online: boolean, maxPlayers: number, playersOnline: number, versionName: string,

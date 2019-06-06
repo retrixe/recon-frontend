@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   AppBar, Toolbar, Button, Typography, Paper, TextField, withWidth
 } from '@material-ui/core'
@@ -7,7 +7,7 @@ import Router from 'next/router'
 import withRoot from '../components/imports/withRoot'
 
 import { ip } from '../config.json'
-import * as fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch'
 
 interface Status {
   code: number, online: boolean, maxPlayers: number, playersOnline: number, versionName: string

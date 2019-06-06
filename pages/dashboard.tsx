@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   AppBar, Toolbar, Button, Typography, Paper, Drawer, withWidth, IconButton, List, ListItem,
   ListItemText, ListItemIcon, Divider
@@ -15,7 +15,7 @@ import CallToAction from '@material-ui/icons/CallToAction'
 import Link from 'next/link'
 
 import { ip } from '../config.json'
-import * as fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch'
 
 import withRoot from '../components/imports/withRoot'
 import Statistics from '../components/dashboard/statistics'

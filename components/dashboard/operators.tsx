@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Typography, Paper, Divider, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton,
   TextField, Fab
@@ -7,7 +7,7 @@ import Delete from '@material-ui/icons/Delete'
 import Add from '@material-ui/icons/Add'
 
 import { ip } from '../../config.json'
-import * as fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch'
 
 interface OperatorsList {
   code: number, operators: ({ name: string, uuid: string })[]

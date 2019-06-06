@@ -1,1 +1,3 @@
-declare module 'isomorphic-unfetch'
+declare module 'isomorphic-unfetch' {
+  export default fetch
+}

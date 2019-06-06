@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import {
   Typography, Paper, Divider, FormControlLabel, Checkbox, List, ListItem, ListItemText,
   ListItemSecondaryAction, IconButton, TextField, Fab
@@ -7,7 +7,7 @@ import Delete from '@material-ui/icons/Delete'
 import Add from '@material-ui/icons/Add'
 
 import { ip } from '../../config.json'
-import * as fetch from 'isomorphic-unfetch'
+import fetch from 'isomorphic-unfetch'
 
 interface WhitelistStats {
   code: number, enabled: boolean, whitelistedPlayers: ({ name: string, uuid: string })[]
