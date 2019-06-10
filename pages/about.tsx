@@ -11,14 +11,14 @@ easy to set up server administration.`
 const Index = () => (
   <div style={{ marginRight: 16, marginLeft: 16 }}>
     <>
-      <title>About ReCon</title>
+      <title>About ReConsole</title>
       {/* <meta property='og:url' content={`${rootURL}/`} /> */}
       <meta property='og:description' content={description} />
       <meta name='Description' content={description} />
     </>
     <AppBar>
       <Toolbar>
-        <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReCon</Typography>
+        <Typography variant='h6' color='inherit' style={{ flex: 1 }}>ReConsole</Typography>
         <Link prefetch href='/'><Button color='inherit'>Console</Button></Link>
       </Toolbar>
     </AppBar>
