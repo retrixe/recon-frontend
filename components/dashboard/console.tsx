@@ -45,6 +45,7 @@ export default class Console extends React.Component<{}, S> {
 
   async executeCommand () {
     try {
+      if (!this.state.command) return
       this.setState({ console: `${this.state.console}\n>${this.state.command}` })
       const request = await (await fetch(
         `${ip}:4200/console/execute`, {
@@ -88,7 +89,7 @@ export default class Console extends React.Component<{}, S> {
             }}>
               {this.state.console.split('\n').reverse().map((i, index) => (
                 <Typography key={index}>{i}</Typography>
-              ))}
+              )).slice(0, 650) /* Truncate to 650 lines due to performance issues afterwards. */}
             </div>
           </Paper>
           <Divider />
