@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "target": "es2016",
     "noImplicitAny": true,
     "removeComments": false,
@@ -13,11 +13,24 @@
     "outDir": "lib/",
     "pretty": true,
     "skipLibCheck": true,
-    "allowJs": true
+    "allowJs": true,
+    // Next.js starts here.
+    "isolatedModules": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "strict": false, // change someday
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false
   },
   "include": [
     "pages",
     "components",
     "index.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

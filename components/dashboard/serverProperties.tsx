@@ -3,6 +3,7 @@ import { Typography, Paper, TextField, Button } from '@material-ui/core'
 
 import { ip } from '../../config.json'
 import fetch from 'isomorphic-unfetch'
+import { ConnectionFailure } from '../imports/connectionFailure'
 
 interface S { // eslint-disable-next-line no-undef
   serverProperties?: { code: number, content: string }, listening: boolean, origContent?: string
@@ -39,16 +40,7 @@ export default class ServerProperties extends React.Component<{}, S> {
 
   render () {
     // Return the code.
-    if (!this.state.listening || !this.state.serverProperties) {
-      return (
-        <Paper style={{ padding: 10 }}>
-          <Typography>Looks like we can{`'`}t connect to the server. Oops!</Typography>
-          <Typography>
-            Check if the server is online and the dashboard configured correctly.
-          </Typography>
-        </Paper>
-      )
-    }
+    if (!this.state.listening || !this.state.serverProperties) return <ConnectionFailure />
     return (
       <>
         {/* server.properties */}

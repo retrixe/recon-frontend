@@ -6,6 +6,7 @@ import Check from '@material-ui/icons/Check'
 
 import { ip } from '../../config.json'
 import fetch from 'isomorphic-unfetch'
+import { ConnectionFailure } from '../imports/connectionFailure'
 
 interface S { // eslint-disable-next-line no-undef
   console: string, listening: boolean, ws?: WebSocket, command: string
@@ -61,16 +62,7 @@ export default class Console extends React.Component<{}, S> {
 
   render () {
     // Return the code.
-    if (!this.state.listening) {
-      return (
-        <Paper style={{ padding: 10 }}>
-          <Typography>Looks like we can{`'`}t connect to the server. Oops!</Typography>
-          <Typography>
-            Check if the server is online and the dashboard configured correctly.
-          </Typography>
-        </Paper>
-      )
-    }
+    if (!this.state.listening) return <ConnectionFailure />
     return (
       <>
         {/* Information about the server. */}

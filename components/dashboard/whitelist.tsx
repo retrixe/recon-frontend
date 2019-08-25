@@ -8,6 +8,7 @@ import Add from '@material-ui/icons/Add'
 
 import { ip } from '../../config.json'
 import fetch from 'isomorphic-unfetch'
+import { ConnectionFailure } from '../imports/connectionFailure'
 
 interface WhitelistStats {
   code: number, enabled: boolean, whitelistedPlayers: ({ name: string, uuid: string })[]
@@ -78,16 +79,7 @@ export default class Whitelist extends React.Component<{}, S> {
 
   render () {
     // Return the code.
-    if (!this.state.listening || !this.state.whitelist) {
-      return (
-        <Paper style={{ padding: 10 }}>
-          <Typography>Looks like we can{`'`}t connect to the server. Oops!</Typography>
-          <Typography>
-            Check if the server is online and the dashboard configured correctly.
-          </Typography>
-        </Paper>
-      )
-    }
+    if (!this.state.listening || !this.state.whitelist) return <ConnectionFailure />
     return (
       <>
         {/* Information about the server. */}

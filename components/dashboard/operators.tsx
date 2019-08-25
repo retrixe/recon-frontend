@@ -8,6 +8,7 @@ import Add from '@material-ui/icons/Add'
 
 import { ip } from '../../config.json'
 import fetch from 'isomorphic-unfetch'
+import { ConnectionFailure } from '../imports/connectionFailure'
 
 interface OperatorsList {
   code: number, operators: ({ name: string, uuid: string })[]
@@ -78,16 +79,7 @@ export default class Operators extends React.Component<{}, S> {
 
   render () {
     // Return the code.
-    if (!this.state.listening || !this.state.operators) {
-      return (
-        <Paper style={{ padding: 10 }}>
-          <Typography>Looks like we can{`'`}t connect to the server. Oops!</Typography>
-          <Typography>
-            Check if the server is online and the dashboard configured correctly.
-          </Typography>
-        </Paper>
-      )
-    }
+    if (!this.state.listening || !this.state.operators) return <ConnectionFailure />
     return (
       <>
         {/* Information about the server. */}
