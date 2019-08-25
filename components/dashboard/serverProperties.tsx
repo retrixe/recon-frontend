@@ -5,7 +5,7 @@ import { ip } from '../../config.json'
 import fetch from 'isomorphic-unfetch'
 import { ConnectionFailure } from '../imports/connectionFailure'
 
-interface S { // eslint-disable-next-line no-undef
+interface S {
   serverProperties?: { code: number, content: string }, listening: boolean, origContent?: string
 }
 

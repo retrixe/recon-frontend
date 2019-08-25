@@ -1,13 +1,10 @@
 import React from 'react'
 import Document, { Head, Main, NextScript } from 'next/document'
-import JssProvider from 'react-jss/lib/JssProvider'
-import flush from 'styled-jsx/server'
-import getPageContext from '../components/imports/getPageContext'
+import { ServerStyleSheets } from '@material-ui/styles'
+import theme from '../components/imports/getPageContext'
 
 class MyDocument extends Document {
   render () {
-    const { pageContext } = this.props
-
     return (
       <html lang='en' dir='ltr'>
         <Head>
@@ -22,7 +19,7 @@ class MyDocument extends Document {
             }
           />
           {/* PWA primary color */}
-          <meta name='theme-color' content={pageContext.theme.palette.primary.main} />
+          <meta name='theme-color' content={theme.palette.primary.main} />
           {/* Open Graph Protocol support. */}
           <meta property='og:title' content='ReConsole' />
           <meta property='og:type' content='website' />
@@ -41,48 +38,49 @@ class MyDocument extends Document {
   }
 }
 
-MyDocument.getInitialProps = ctx => {
+MyDocument.getInitialProps = async ctx => {
   // Resolution order
   //
   // On the server:
-  // 1. page.getInitialProps
-  // 2. document.getInitialProps
-  // 3. page.render
-  // 4. document.render
+  // 1. app.getInitialProps
+  // 2. page.getInitialProps
+  // 3. document.getInitialProps
+  // 4. app.render
+  // 5. page.render
+  // 6. document.render
   //
   // On the server with error:
-  // 2. document.getInitialProps
+  // 1. document.getInitialProps
+  // 2. app.render
   // 3. page.render
   // 4. document.render
   //
   // On the client
-  // 1. page.getInitialProps
-  // 3. page.render
+  // 1. app.getInitialProps
+  // 2. page.getInitialProps
+  // 3. app.render
+  // 4. page.render
 
-  // Get the context of the page to collected side effects.
-  const pageContext = getPageContext()
-  const page = ctx.renderPage(Component => props => ( // eslint-disable-line react/display-name
-    <JssProvider
-      registry={pageContext.sheetsRegistry}
-      generateClassName={pageContext.generateClassName}
-    >
-      <Component pageContext={pageContext} {...props} />
-    </JssProvider>
-  ))
+  // Render app and page and get the context of the page with collected side effects.
+  const sheets = new ServerStyleSheets()
+  const originalRenderPage = ctx.renderPage
+
+  ctx.renderPage = () =>
+    originalRenderPage({
+      enhanceApp: App => props => sheets.collect(<App {...props} />)
+    })
+
+  const initialProps = await Document.getInitialProps(ctx)
 
   return {
-    ...page,
-    pageContext,
-    styles: (
-      <React.Fragment>
-        <style
-          id='jss-server-side'
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: pageContext.sheetsRegistry.toString() }}
-        />
-        {flush() || null}
+    ...initialProps,
+    // Styles fragment is rendered after the app and page rendering finish.
+    styles: [
+      <React.Fragment key='styles'>
+        {initialProps.styles}
+        {sheets.getStyleElement()}
       </React.Fragment>
-    )
+    ]
   }
 }
 
