@@ -7,8 +7,7 @@ const theme = createMuiTheme({
     primary: colors.blue,
     secondary: colors.purple,
     type: 'dark'
-  },
-  props: { MuiTypography: { variant: 'body2' } }
+  }
 })
 
 export default theme

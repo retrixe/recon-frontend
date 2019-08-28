@@ -80,7 +80,7 @@ export default class Console extends React.Component<{}, S> {
               flexDirection: 'column-reverse'
             }}>
               {this.state.console.split('\n').reverse().map((i, index) => (
-                <Typography key={index}>{i}</Typography>
+                <Typography key={index} variant='body2' style={{ lineHeight: 1.5 }}>{i}</Typography>
               )).slice(0, 650) /* Truncate to 650 lines due to performance issues afterwards. */}
             </div>
           </Paper>
